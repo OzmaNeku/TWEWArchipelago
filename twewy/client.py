@@ -89,7 +89,6 @@ class TWEWYClient(BizHawkClient):
                     if fresh_inventory_data[i + 1] != (combined_index >> 8) & 0xFF:
                         continue
                     new_qty = self.injected_items.get(combined_index, 0) + 1
-                    logger.info("Sending item to inventory FROM SERVER, iterating version")
                     await bizhawk.write(
                         context.bizhawk_ctx, [
                             (inventory_base + i, bytes([combined_index & 0xFF, (combined_index >> 8) & 0xFF, new_qty, 0x00]), ram_domain)
@@ -105,7 +104,6 @@ class TWEWYClient(BizHawkClient):
                     for i in range(0, inventory_size, 4):
                         if fresh_inventory_data[i] != 0xFF:
                             continue
-                        logger.info("Sending item to inventory FROM SERVER, single version.")
                         await bizhawk.write(
                             context.bizhawk_ctx, [
                                 (inventory_base + i, bytes([combined_index & 0xFF, (combined_index >> 8) & 0xFF, 0x01, 0x00]), ram_domain)
@@ -143,7 +141,6 @@ class TWEWYClient(BizHawkClient):
                         self.injected_items[0x2A7] = self.injected_items.get(0x2A7, 0) + 1
                         break
                 self.phone_sent = True
-                logger.info("Sent phone menu")
 
             # 3.2 Text skip - continuously write or will be purged on phone menu open
             if context.slot_data.get("start_with_text_skip"):
